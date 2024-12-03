@@ -1,12 +1,12 @@
 
-def safe(diffs):
-    return (all(d>0 for d in diffs) or all(d<0 for d in diffs)) and all(abs(d)<=3 for d in diffs)
+def is_safe(diffs):
+    return all(1 <= d <= 3 for d in diffs) or all(-3 <= d <= -1 for d in diffs)
 
 def part1(puzzle):
     answer = 0
     for line in puzzle.splitlines():
         numbers = [int(i) for i in line.split()]
-        answer += safe([a-b for a,b in zip(numbers,numbers[1:])])
+        answer += is_safe([a-b for a,b in zip(numbers,numbers[1:])])
     return answer
 
 def part2(puzzle):
@@ -17,7 +17,7 @@ def part2(puzzle):
         for i in range(len(numbers)):
             del dampened[i][i]
         dampened.append(numbers)
-        answer += any(safe([a-b for a,b in zip(n,n[1:])]) for n in dampened)
+        answer += any(is_safe([a-b for a,b in zip(n,n[1:])]) for n in dampened)
     return answer
 
 
