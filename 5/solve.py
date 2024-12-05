@@ -1,36 +1,25 @@
 
 import collections
 
-def part1(puzzle):
-    answer = 0
-    lines = puzzle.splitlines()
-    split = lines.index("")
-    ordering = set(tuple(int(a) for a in line.split('|')) for line in lines[:split])
-    updates = tuple(tuple(int(a) for a in line.split(',')) for line in lines[split+1:])
-    for pages in updates:
-        if all((pages[j],pages[i]) not in ordering for i in range(len(pages)-1) for j in range(i+1,len(pages))):
-            answer += pages[len(pages)//2]
-
-
-    return answer
-
-def part2(puzzle):
-    answer = 0
-    lines = puzzle.splitlines()
-    split = lines.index("")
-    ordering = set(tuple(int(a) for a in line.split('|')) for line in lines[:split])
-    updates = tuple(tuple(int(a) for a in line.split(',')) for line in lines[split+1:])
-    for pages in updates:
-        if any((pages[j],pages[i]) in ordering for i in range(len(pages)-1) for j in range(i+1,len(pages))):
-
-            count = [b for a in pages for b in pages if (a,b) in ordering]
-
-            for k,v in collections.Counter(count).items():
-                if v==len(pages)//2:
-                    answer += k
-
-    return answer
-
+def solve(puzzle):
+    answer1 = 0
+    answer2 = 0
+    lines = iter(puzzle.splitlines())
+    ordering = collections.defaultdict(set)
+    while line:=next(lines):
+        a, b = line.split('|')
+        ordering[a].add(b)
+    for line in lines:
+        pages = line.split(',')
+        if all(b in ordering[a] for a,b in zip(pages,pages[1:])):
+            answer1 += int(pages[len(pages)//2])
+        else:
+            s = set(pages)
+            for p in pages:
+                if len(ordering[p] & s) == len(pages)//2:
+                    answer2 += int(p)
+                    break
+    return answer1, answer2
 
 def main():
     filename = 'input.txt'
@@ -39,8 +28,7 @@ def main():
         filename = sys.argv[1]
     with open(filename) as file:
         puzzle = file.read()
-        print('part1:', part1(puzzle))
-        print('part2:', part2(puzzle))
+        print(*solve(puzzle),sep='\n')
 
 if __name__ == '__main__':
     main()
