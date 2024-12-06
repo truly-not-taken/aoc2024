@@ -33,12 +33,13 @@ def solve(puzzle):
 
     answer1 = sum(spot=='X' for line in m for spot in line)
 
+    oldpath = m
     for oy in range(len(m)):
         for ox in range(len(m[0])):
 
             # print(oy,ox,'   ',end='\r',flush=True)
             m = list(list(line) for line in newmap)
-            if m[oy][ox] != '.':
+            if oldpath[oy][ox] != 'X':
                 continue
             m[oy][ox] = '#'
 
