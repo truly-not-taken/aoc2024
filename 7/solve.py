@@ -5,40 +5,60 @@ def solve(puzzle):
     answer2 = 0
     for line in puzzle.splitlines():
         left, right = line.split(':')
-        left = int(left)
-        numbers = [int(i) for i in right.strip().split()]
-        print(left, numbers)
-        for binary in range(2**len(numbers)-1):
-            ops = ['+' if binary&(1<<j) else '*' for j in range(len(numbers)-1)]
-            n = iter(numbers)
-            r = next(n)
-            for op, i in zip(ops,n):
-                if op == '+':
-                    r += i
-                else:
-                    r *= i
-            # print(ops, r)
-            if r==left:
-                # print(left, numbers, ops)
-                answer1 += left
-                break
+        test_value = int(left)
+        words = right.strip().split()
+        numbers = [int(i) for i in words]
 
-        for ternary in range(3**len(numbers)-1):
-            ops = [['+','*','||'][ternary // 3**j % 3] for j in range(len(numbers)-1)]
-            n = iter(numbers)
-            r = next(n)
-            for op, i in zip(ops,n):
-                if op == '+':
-                    r += i
-                elif op == '*':
-                    r *= i
-                else:
-                    r = int(str(r)+str(i))
-            # print(ops, r)
-            if r==left:
-                print(left, numbers, ops)
-                answer2 += left
-                break
+        results = [numbers[0]]
+        ops = [0]
+        # print(test_value, numbers)
+        while ops[0]<2:
+            # print(ops,results)
+            if ops[-1] == 0:
+                results.append(results[-1] + numbers[len(results)])
+            elif ops[-1] == 1:
+                results.append(results[-1] * numbers[len(results)])
+            else:
+                results.pop()
+                ops.pop()
+                ops[-1] = ops[-1] + 1
+                continue
+
+            if len(results) < len(numbers) and results[-1] <= test_value:
+                ops.append(0)
+            else:
+                if results[-1] == test_value:
+                    answer1 += test_value
+                    # print('Good1', test_value, results, numbers, ['+*'[op] for op in ops])
+                    break
+                ops[-1] = ops[-1] + 1
+                results.pop()
+
+        results = [numbers[0]]
+        ops = [0]
+        while ops[0]<3:
+            # print(ops,results)
+            if ops[-1] == 0:
+                results.append(results[-1] + numbers[len(results)])
+            elif ops[-1] == 1:
+                results.append(results[-1] * numbers[len(results)])
+            elif ops[-1] == 2:
+                results.append(int(str(results[-1]) + words[len(results)]))
+            else:
+                results.pop()
+                ops.pop()
+                ops[-1] = ops[-1] + 1
+                continue
+
+            if len(results) < len(numbers) and results[-1] <= test_value:
+                ops.append(0)
+            else:
+                if results[-1] == test_value:
+                    answer2 += test_value
+                    # print('Good2', test_value, results, numbers, ['+*|'[op] for op in ops])
+                    break
+                ops[-1] = ops[-1] + 1
+                results.pop()
 
     return answer1, answer2
 
