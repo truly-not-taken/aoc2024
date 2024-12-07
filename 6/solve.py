@@ -11,7 +11,6 @@ def solve(puzzle):
             if spot=='^':
                 x,y = i,j
                 break
-    # print(x,y)
     start = x,y
     newmap = tuple(tuple(line) for line in m)
 
@@ -28,8 +27,6 @@ def solve(puzzle):
                 (0,1):(-1,0),
                 (-1,0):(0,-1),
             }[(dx,dy)]
-
-    # print('\n'.join(''.join(l) for l in m))
 
     answer1 = sum(spot=='X' for line in m for spot in line)
 
@@ -78,8 +75,6 @@ def main():
         filename = sys.argv[1]
     with open(filename) as file:
         puzzle = file.read()
-        # print('part1:', part1(puzzle))
-        # print('part2:', part2(puzzle))
         print(*solve(puzzle),sep='\n')
 
 if __name__ == '__main__':
