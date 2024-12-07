@@ -1,4 +1,3 @@
-import itertools
 
 def solve(puzzle):
     answer1 = 0
@@ -11,9 +10,7 @@ def solve(puzzle):
 
         results = [numbers[0]]
         ops = [0]
-        # print(test_value, numbers)
         while ops[0]<2:
-            # print(ops,results)
             if ops[-1] == 0:
                 results.append(results[-1] + numbers[len(results)])
             elif ops[-1] == 1:
@@ -29,7 +26,6 @@ def solve(puzzle):
             else:
                 if results[-1] == test_value:
                     answer1 += test_value
-                    # print('Good1', test_value, results, numbers, ['+*'[op] for op in ops])
                     break
                 ops[-1] = ops[-1] + 1
                 results.pop()
@@ -37,7 +33,6 @@ def solve(puzzle):
         results = [numbers[0]]
         ops = [0]
         while ops[0]<3:
-            # print(ops,results)
             if ops[-1] == 0:
                 results.append(results[-1] + numbers[len(results)])
             elif ops[-1] == 1:
@@ -55,7 +50,6 @@ def solve(puzzle):
             else:
                 if results[-1] == test_value:
                     answer2 += test_value
-                    # print('Good2', test_value, results, numbers, ['+*|'[op] for op in ops])
                     break
                 ops[-1] = ops[-1] + 1
                 results.pop()
