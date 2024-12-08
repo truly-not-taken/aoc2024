@@ -5,35 +5,40 @@ def solve(puzzle):
     answer1 = 0
     answer2 = 0
     lines = puzzle.splitlines()
-    antennas = collections.defaultdict(set)
+    antennas = collections.defaultdict(list)
     antinodes = set()
     antinodes2 = set()
-    h = len(lines)
-    w = len(lines[0])
-    for i in range(h):
-        for j in range(w):
+    n = len(lines)
+    for i in range(n):
+        for j in range(n):
             if lines[i][j].isalnum():
-                antennas[lines[i][j]].add((i,j))
-    # print(antennas)
+                antennas[lines[i][j]].append((i,j))
     for freq,coords in antennas.items():
-        for y1,x1 in coords:
-            for y2,x2 in coords:
-                if (y1,x1) == (y2,x2):
-                    continue
-                antinodes.add( (y1+y1-y2, x1+x1-x2) )
-                antinodes.add( (y2+y2-y1, x2+x2-x1) )
+        for i in range(len(coords)):
+            for j in range(i+1,len(coords)):
+                y1,x1 = coords[i]
+                y2,x2 = coords[j]
 
-                for i in range(h+w):
-                    antinodes2.add( (y1+(y1-y2)*i, x1+(x1-x2)*i) )
-                    antinodes2.add( (y2+(y2-y1)*i, x2+(x2-x1)*i) )
+                y3,x3 = (y1+y1-y2, x1+x1-x2)
+                if y3 in range(n) and x3 in range(n):
+                    antinodes.add( (y3,x3) )
+                y3,x3 = (y2+y2-y1, x2+x2-x1)
+                if y3 in range(n) and x3 in range(n):
+                    antinodes.add( (y3,x3) )
 
-    # print(antinodes)
-    # print({(y,x) for y,x in antinodes if y in range(h) and x in range(w)})
-    # for i in range(h):
-        # print(''.join('#' if (i,j) in antinodes else '.' for j in range(w)))
-    answer1 = sum(1 for y,x in antinodes if y in range(h) and x in range(w))
-    answer2 = sum(1 for y,x in antinodes2 if y in range(h) and x in range(w))
+                for multiple in range(n):
+                    y3,x3 = (y1+(y1-y2)*multiple, x1+(x1-x2)*multiple)
+                    if y3 not in range(n) or x3 not in range(n):
+                        break
+                    antinodes2.add( (y3,x3) )
+                for multiple in range(n):
+                    y3,x3 = (y2+(y2-y1)*multiple, x2+(x2-x1)*multiple)
+                    if y3 not in range(n) or x3 not in range(n):
+                        break
+                    antinodes2.add( (y3,x3) )
 
+    answer1 = len(antinodes)
+    answer2 = len(antinodes2)
 
     return answer1, answer2
 
