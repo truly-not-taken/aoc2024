@@ -35,24 +35,35 @@ def solve(puzzle):
     # print(''.join('.' if b is None else str(b) for b in blocks2))
 
     j = len(blocks2)-1
+    first_free = 0
     files = [int(l) for l in disk[::2]]
-    while j>0:
-        while 0<j and blocks2[j] is None:
-            j-=1
-        file_id = blocks2[j]
+    file_id = len(files)
+    not_fit = 10
+    while j>first_free:
+        file_id -= 1
         l = files[file_id]
-        i = blocks2.index(None)
-        while i<j and any(blocks2[i:i+l]):
-            i+=1
-        if i<j and not any(blocks2[i:i+l]):
-            print(i,j)
+        if l >= not_fit:
+            continue
+        while blocks2[j] != file_id:
+            j-=1
+        i = first_free = blocks2.index(None, first_free)
+
+        len_free = 0
+        while len_free != l and i<j:
+            if blocks2[i] is None:
+                len_free += 1
+            else:
+                len_free = 0
+            i += 1
+        i -= len_free
+
+        if len_free == l:
+            # print(i,j)
             blocks2[i:i+l] = [file_id]*l
             blocks2[j-l+1:j+1] = [None]*l
-
             # print(''.join('.' if b is None else str(b) for b in blocks2))
-
-        while 0<j and blocks2[j]==file_id:
-            j-=1
+        else:
+            not_fit = l
 
     for i, file_id in enumerate(blocks2):
         if file_id is None:
