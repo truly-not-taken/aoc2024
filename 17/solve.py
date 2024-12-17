@@ -57,8 +57,8 @@ def solve(puzzle):
 
     # assume a is divided by 8 in the loop
     # assume b and c are erased in each iteration
-    a = range(8)
-    for i in reversed(range(len(program)-1)):
+    a = [0]
+    for i in reversed(range(len(program))):
         a = [j*8+k for j in a for k in range(8) if execute(j*8+k,0,0,program) == program[i:]]
     answer2 = min(a,default=0)
 
